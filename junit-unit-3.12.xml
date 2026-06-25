@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="30" skipped="0" tests="56" time="2.629" timestamp="2026-06-25T00:27:50.186838+00:00" hostname="runnervm7b5n9"><testcase classname="tests.unit.test_exceptions.TestExceptionHierarchy" name="test_exception_hierarchy" time="0.002" /><testcase classname="tests.unit.test_exceptions.TestExceptionHierarchy" name="test_exception_message" time="0.001" /><testcase classname="tests.unit.test_exceptions.TestExceptionHierarchy" name="test_exception_details" time="0.001"><failure message="TypeError: InsightExtractorError() takes no keyword arguments">tests/unit/test_exceptions.py:33: in test_exception_details
+    err = InsightExtractorError("boom", details=details)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: InsightExtractorError() takes no keyword arguments</failure></testcase><testcase classname="tests.unit.test_exceptions.TestExceptionHierarchy" name="test_exception_details_default" time="0.001"><failure message="AttributeError: 'InsightExtractorError' object has no attribute 'details'">tests/unit/test_exceptions.py:40: in test_exception_details_default
+    assert err.details == {}
+           ^^^^^^^^^^^
+E   AttributeError: 'InsightExtractorError' object has no attribute 'details'</failure></testcase><testcase classname="tests.unit.test_exceptions.TestConfigLoadError" name="test_is_value_error" time="0.001"><failure message="AssertionError: assert False&#10; +  where False = isinstance(ConfigLoadError('bad config'), ValueError)">tests/unit/test_exceptions.py:48: in test_is_value_error
+    assert isinstance(err, ValueError)
+E   AssertionError: assert False
+E    +  where False = isinstance(ConfigLoadError('bad config'), ValueError)</failure></testcase><testcase classname="tests.unit.test_exceptions.TestConfigLoadError" name="test_message_and_details" time="0.001"><failure message="TypeError: ConfigLoadError() takes no keyword arguments">tests/unit/test_exceptions.py:52: in test_message_and_details
+    err = ConfigLoadError("parse failed", details={"line": 3})
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: ConfigLoadError() takes no keyword arguments</failure></testcase><testcase classname="tests.unit.test_exceptions.TestModelLoadError" name="test_is_runtime_error" time="0.001"><failure message="AssertionError: assert False&#10; +  where False = isinstance(ModelLoadError('model not found'), RuntimeError)">tests/unit/test_exceptions.py:62: in test_is_runtime_error
+    assert isinstance(err, RuntimeError)
+E   AssertionError: assert False
+E    +  where False = isinstance(ModelLoadError('model not found'), RuntimeError)</failure></testcase><testcase classname="tests.unit.test_exceptions.TestModelLoadError" name="test_message" time="0.001" /><testcase classname="tests.unit.test_exceptions.TestStateLoadError" name="test_is_insight_extractor_error" time="0.001" /><testcase classname="tests.unit.test_exceptions.TestStateLoadError" name="test_message" time="0.001" /><testcase classname="tests.unit.test_exceptions.TestPatternCompileError" name="test_is_insight_extractor_error" time="0.001" /><testcase classname="tests.unit.test_exceptions.TestPatternCompileError" name="test_message" time="0.001" /><testcase classname="tests.unit.test_exceptions.TestPatternCompileError" name="test_details" time="0.001"><failure message="TypeError: PatternCompileError() takes no keyword arguments">tests/unit/test_exceptions.py:94: in test_details
+    err = PatternCompileError("bad pattern", details={"pattern": "[invalid"})
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: PatternCompileError() takes no keyword arguments</failure></testcase><testcase classname="tests.unit.test_models.TestMatchInfo" name="test_match_info_valid" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 3 validation errors for MatchInfo&#10;match&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...ctor', 'stemmed': False}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;start&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...ctor', 'stemmed': False}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;end&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...ctor', 'stemmed': False}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:21: in test_match_info_valid
+    mi = MatchInfo(
+E   pydantic_core._pydantic_core.ValidationError: 3 validation errors for MatchInfo
+E   match
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...ctor', 'stemmed': False}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   start
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...ctor', 'stemmed': False}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   end
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...ctor', 'stemmed': False}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_models.TestMatchInfo" name="test_match_info_invalid_types" time="0.001" /><testcase classname="tests.unit.test_models.TestMatchInfo" name="test_match_info_defaults" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 4 validation errors for MatchInfo&#10;match&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'span'..., 'matched_text': 'CVE'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;start&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'span'..., 'matched_text': 'CVE'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;end&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'span'..., 'matched_text': 'CVE'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;stemmed&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'span'..., 'matched_text': 'CVE'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:45: in test_match_info_defaults
+    mi = MatchInfo(keyword="CVE", span=(0, 3), matched_text="CVE")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 4 validation errors for MatchInfo
+E   match
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'span'..., 'matched_text': 'CVE'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   start
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'span'..., 'matched_text': 'CVE'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   end
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'span'..., 'matched_text': 'CVE'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   stemmed
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'span'..., 'matched_text': 'CVE'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_models.TestKeywordStats" name="test_keyword_stats_valid" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 7 validation errors for KeywordStats&#10;total_keywords&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;total_categories&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;category_counts&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;top_keywords&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;stem_mode&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;case_sensitive&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;custom_suffixes&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:54: in test_keyword_stats_valid
+    ks = KeywordStats(
+E   pydantic_core._pydantic_core.ValidationError: 7 validation errors for KeywordStats
+E   total_keywords
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   total_categories
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   category_counts
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   top_keywords
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   stem_mode
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   case_sensitive
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   custom_suffixes
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...: ['regex', 'semantic']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_models.TestKeywordStats" name="test_keyword_stats_defaults" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 7 validation errors for KeywordStats&#10;total_keywords&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;total_categories&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;category_counts&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;top_keywords&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;stem_mode&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;case_sensitive&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;custom_suffixes&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:66: in test_keyword_stats_defaults
+    ks = KeywordStats(keyword="CVE", count=2)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 7 validation errors for KeywordStats
+E   total_keywords
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   total_categories
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   category_counts
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   top_keywords
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   stem_mode
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   case_sensitive
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   custom_suffixes
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'count': 2}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_models.TestSemanticHit" name="test_semantic_hit_valid" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 2 validation errors for SemanticHit&#10;score&#10;  Field required [type=missing, input_value={'keyword': 'phishing', '...aign targeted finance.'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;context&#10;  Field required [type=missing, input_value={'keyword': 'phishing', '...aign targeted finance.'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:75: in test_semantic_hit_valid
+    sh = SemanticHit(
+E   pydantic_core._pydantic_core.ValidationError: 2 validation errors for SemanticHit
+E   score
+E     Field required [type=missing, input_value={'keyword': 'phishing', '...aign targeted finance.'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   context
+E     Field required [type=missing, input_value={'keyword': 'phishing', '...aign targeted finance.'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_models.TestSemanticHit" name="test_semantic_hit_invalid_similarity" time="0.001" /><testcase classname="tests.unit.test_models.TestSentenceScore" name="test_sentence_score_valid" time="0.001"><failure message="AttributeError: 'SentenceScore' object has no attribute 'keyword_hits'">tests/unit/test_models.py:107: in test_sentence_score_valid
+    assert ss.keyword_hits == ["ransomware", "attack"]
+           ^^^^^^^^^^^^^^^
+../../../.local/lib/python3.12/site-packages/pydantic/main.py:1042: in __getattr__
+    raise AttributeError(f'{type(self).__name__!r} object has no attribute {item!r}')
+E   AttributeError: 'SentenceScore' object has no attribute 'keyword_hits'</failure></testcase><testcase classname="tests.unit.test_models.TestExtractResult" name="test_extract_result_valid" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 7 validation errors for KeywordStats&#10;total_keywords&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;total_categories&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;category_counts&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;top_keywords&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;stem_mode&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;case_sensitive&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;custom_suffixes&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:119: in test_extract_result_valid
+    KeywordStats(keyword="ransomware", count=3, category="malware"),
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 7 validation errors for KeywordStats
+E   total_keywords
+E     Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   total_categories
+E     Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   category_counts
+E     Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   top_keywords
+E     Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   stem_mode
+E     Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   case_sensitive
+E     Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   custom_suffixes
+E     Field required [type=missing, input_value={'keyword': 'ransomware',..., 'category': 'malware'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_models.TestExtractResult" name="test_extract_result_timestamp_validation" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 9 validation errors for ExtractResult&#10;input_hash&#10;  Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;word_count&#10;  Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;regex_entities&#10;  Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;dynamic_keyword_matches&#10;  Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;semantic_keywords&#10;  Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;key_sentences&#10;  Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;newly_expanded_keywords&#10;  Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;total_tracked_keywords&#10;  Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;keyword_stats&#10;  Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:156: in test_extract_result_timestamp_validation
+    er = ExtractResult(
+E   pydantic_core._pydantic_core.ValidationError: 9 validation errors for ExtractResult
+E   input_hash
+E     Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   word_count
+E     Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   regex_entities
+E     Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   dynamic_keyword_matches
+E     Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   semantic_keywords
+E     Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   key_sentences
+E     Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   newly_expanded_keywords
+E     Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   total_tracked_keywords
+E     Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   keyword_stats
+E     Field required [type=missing, input_value={'text_hash': 'abc', 'key... '2026-05-11T14:00:00Z'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_models.TestExtractResult" name="test_extract_result_invalid_timestamp" time="0.001" /><testcase classname="tests.unit.test_models.TestExtractResult" name="test_extract_result_defaults" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 10 validation errors for ExtractResult&#10;timestamp&#10;  Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;input_hash&#10;  Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;word_count&#10;  Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;regex_entities&#10;  Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;dynamic_keyword_matches&#10;  Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;semantic_keywords&#10;  Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;key_sentences&#10;  Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;newly_expanded_keywords&#10;  Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;total_tracked_keywords&#10;  Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;keyword_stats&#10;  Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:174: in test_extract_result_defaults
+    er = ExtractResult(text_hash="x", keywords=["y"])
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 10 validation errors for ExtractResult
+E   timestamp
+E     Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   input_hash
+E     Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   word_count
+E     Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   regex_entities
+E     Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   dynamic_keyword_matches
+E     Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   semantic_keywords
+E     Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   key_sentences
+E     Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   newly_expanded_keywords
+E     Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   total_tracked_keywords
+E     Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   keyword_stats
+E     Field required [type=missing, input_value={'text_hash': 'x', 'keywords': ['y']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_models.TestModelSerialization" name="test_model_serialization" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 4 validation errors for MatchInfo&#10;match&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'span'...tched_text': 'CVE-2025'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;start&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'span'...tched_text': 'CVE-2025'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;end&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'span'...tched_text': 'CVE-2025'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;stemmed&#10;  Field required [type=missing, input_value={'keyword': 'CVE', 'span'...tched_text': 'CVE-2025'}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:185: in test_model_serialization
+    mi = MatchInfo(keyword="CVE", span=(0, 3), matched_text="CVE-2025")
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 4 validation errors for MatchInfo
+E   match
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'span'...tched_text': 'CVE-2025'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   start
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'span'...tched_text': 'CVE-2025'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   end
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'span'...tched_text': 'CVE-2025'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   stemmed
+E     Field required [type=missing, input_value={'keyword': 'CVE', 'span'...tched_text': 'CVE-2025'}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_models.TestModelSerialization" name="test_model_json_roundtrip" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 7 validation errors for KeywordStats&#10;total_keywords&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;total_categories&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;category_counts&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;top_keywords&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;stem_mode&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;case_sensitive&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;custom_suffixes&#10;  Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:192: in test_model_json_roundtrip
+    original = KeywordStats(
+E   pydantic_core._pydantic_core.ValidationError: 7 validation errors for KeywordStats
+E   total_keywords
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   total_categories
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   category_counts
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   top_keywords
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   stem_mode
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   case_sensitive
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   custom_suffixes
+E     Field required [type=missing, input_value={'keyword': 'ransomware',...', 'sources': ['regex']}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_models.TestModelSerialization" name="test_extract_result_json_roundtrip" time="0.001"><failure message="pydantic_core._pydantic_core.ValidationError: 7 validation errors for KeywordStats&#10;total_keywords&#10;  Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;total_categories&#10;  Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;category_counts&#10;  Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;top_keywords&#10;  Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;stem_mode&#10;  Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;case_sensitive&#10;  Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing&#10;custom_suffixes&#10;  Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]&#10;    For further information visit https://errors.pydantic.dev/2.13/v/missing">tests/unit/test_models.py:209: in test_extract_result_json_roundtrip
+    keyword_stats=[KeywordStats(keyword="a", count=1)],
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   pydantic_core._pydantic_core.ValidationError: 7 validation errors for KeywordStats
+E   total_keywords
+E     Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   total_categories
+E     Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   category_counts
+E     Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   top_keywords
+E     Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   stem_mode
+E     Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   case_sensitive
+E     Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing
+E   custom_suffixes
+E     Field required [type=missing, input_value={'keyword': 'a', 'count': 1}, input_type=dict]
+E       For further information visit https://errors.pydantic.dev/2.13/v/missing</failure></testcase><testcase classname="tests.unit.test_stemmer.TestInit" name="test_init_defaults" time="0.002"><failure message="AssertionError: assert ('s', 'es', 'ed', 'ing', 'er', 'est', 'ly', 'tion', 'ness', 'ment') == []&#10;  &#10;  Left contains 10 more items, first extra item: 's'&#10;  &#10;  Full diff:&#10;  - []&#10;  + (&#10;  +     's',&#10;  +     'es',&#10;  +     'ed',&#10;  +     'ing',&#10;  +     'er',&#10;  +     'est',&#10;  +     'ly',&#10;  +     'tion',&#10;  +     'ness',&#10;  +     'ment',&#10;  + )">tests/unit/test_stemmer.py:19: in test_init_defaults
+    assert stemmer.custom_suffixes == []
+E   AssertionError: assert ('s', 'es', 'ed', 'ing', 'er', 'est', 'ly', 'tion', 'ness', 'ment') == []
+E     
+E     Left contains 10 more items, first extra item: 's'
+E     
+E     Full diff:
+E     - []
+E     + (
+E     +     's',
+E     +     'es',
+E     +     'ed',
+E     +     'ing',
+E     +     'er',
+E     +     'est',
+E     +     'ly',
+E     +     'tion',
+E     +     'ness',
+E     +     'ment',
+E     + )</failure></testcase><testcase classname="tests.unit.test_stemmer.TestInit" name="test_init_custom" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestGeneratePattern" name="test_generate_pattern_exact" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestGeneratePattern" name="test_generate_pattern_stem" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestGeneratePattern" name="test_generate_pattern_prefix" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestGeneratePattern" name="test_generate_pattern_suffix" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestGeneratePattern" name="test_generate_pattern_fuzzy" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestGeneratePattern" name="test_generate_pattern_regex" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestGenerateStemVariations" name="test_generate_stem_variations" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestCompileKeywords" name="test_compile_keywords_empty" time="0.001"><failure message="AssertionError: assert None is not None&#10; +  where None = DynamicKeywordStemmer(stem_mode=&lt;StemMode.STEM: 'stem'&gt;, case_sensitive=False, keywords=0, suffixes=10).compiled_pattern">tests/unit/test_stemmer.py:82: in test_compile_keywords_empty
+    assert stemmer.compiled_pattern is not None
+E   AssertionError: assert None is not None
+E    +  where None = DynamicKeywordStemmer(stem_mode=&lt;StemMode.STEM: 'stem'&gt;, case_sensitive=False, keywords=0, suffixes=10).compiled_pattern</failure></testcase><testcase classname="tests.unit.test_stemmer.TestCompileKeywords" name="test_compile_keywords_single" time="0.003"><failure message="AttributeError: 'NoneType' object has no attribute 'search'">tests/unit/test_stemmer.py:88: in test_compile_keywords_single
+    assert stemmer.compiled_pattern.search("ransomware")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'NoneType' object has no attribute 'search'</failure></testcase><testcase classname="tests.unit.test_stemmer.TestCompileKeywords" name="test_compile_keywords_multiple" time="0.007"><failure message="AttributeError: 'NoneType' object has no attribute 'search'">tests/unit/test_stemmer.py:95: in test_compile_keywords_multiple
+    assert stemmer.compiled_pattern.search(kw), f"failed to match {kw}"
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'NoneType' object has no attribute 'search'</failure></testcase><testcase classname="tests.unit.test_stemmer.TestCompileKeywords" name="test_compile_keywords_max_length" time="2.006"><failure message="AssertionError: assert None is not None&#10; +  where None = DynamicKeywordStemmer(stem_mode=&lt;StemMode.STEM: 'stem'&gt;, case_sensitive=False, keywords=0, suffixes=10).compiled_pattern">tests/unit/test_stemmer.py:101: in test_compile_keywords_max_length
+    assert stemmer.compiled_pattern is not None
+E   AssertionError: assert None is not None
+E    +  where None = DynamicKeywordStemmer(stem_mode=&lt;StemMode.STEM: 'stem'&gt;, case_sensitive=False, keywords=0, suffixes=10).compiled_pattern</failure></testcase><testcase classname="tests.unit.test_stemmer.TestCompileTypedPatterns" name="test_compile_typed_patterns" time="0.003"><failure message="AssertionError: assert 'malware' in {'proper_nouns': re.compile('(\\bCVE(?:s|es|ed|ing|er|est|ly|tion|ness|ment)?\\b)', re.IGNORECASE), 'general_terms': re.compile('(\\bransomware(?:s|es|ed|ing|er|est|ly|tion|ness|ment)?\\b)', re.IGNORECASE)}">tests/unit/test_stemmer.py:112: in test_compile_typed_patterns
+    assert "malware" in typed
+E   AssertionError: assert 'malware' in {'proper_nouns': re.compile('(\\bCVE(?:s|es|ed|ing|er|est|ly|tion|ness|ment)?\\b)', re.IGNORECASE), 'general_terms': re.compile('(\\bransomware(?:s|es|ed|ing|er|est|ly|tion|ness|ment)?\\b)', re.IGNORECASE)}</failure></testcase><testcase classname="tests.unit.test_stemmer.TestAddRemoveKeyword" name="test_add_keyword" time="0.003"><failure message="AssertionError: assert None&#10; +  where None = &lt;built-in method search of re.Pattern object at 0x2cd04a30&gt;('ransomware')&#10; +    where &lt;built-in method search of re.Pattern object at 0x2cd04a30&gt; = re.compile('(\\bphishing(?:s|es|ed|ing|er|est|ly|tion|ness|ment)?\\b)', re.IGNORECASE).search&#10; +      where re.compile('(\\bphishing(?:s|es|ed|ing|er|est|ly|tion|ness|ment)?\\b)', re.IGNORECASE) = DynamicKeywordStemmer(stem_mode=&lt;StemMode.STEM: 'stem'&gt;, case_sensitive=False, keywords=1, suffixes=10).compiled_pattern">tests/unit/test_stemmer.py:125: in test_add_keyword
+    assert stemmer.compiled_pattern.search("ransomware")
+E   AssertionError: assert None
+E    +  where None = &lt;built-in method search of re.Pattern object at 0x2cd04a30&gt;('ransomware')
+E    +    where &lt;built-in method search of re.Pattern object at 0x2cd04a30&gt; = re.compile('(\\bphishing(?:s|es|ed|ing|er|est|ly|tion|ness|ment)?\\b)', re.IGNORECASE).search
+E    +      where re.compile('(\\bphishing(?:s|es|ed|ing|er|est|ly|tion|ness|ment)?\\b)', re.IGNORECASE) = DynamicKeywordStemmer(stem_mode=&lt;StemMode.STEM: 'stem'&gt;, case_sensitive=False, keywords=1, suffixes=10).compiled_pattern</failure></testcase><testcase classname="tests.unit.test_stemmer.TestAddRemoveKeyword" name="test_remove_keyword" time="0.006"><failure message="AttributeError: 'NoneType' object has no attribute 'search'">tests/unit/test_stemmer.py:130: in test_remove_keyword
+    assert not stemmer.compiled_pattern.search("ransomware")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'NoneType' object has no attribute 'search'</failure></testcase><testcase classname="tests.unit.test_stemmer.TestAddRemoveKeyword" name="test_cache_invalidation_on_add" time="0.005" /><testcase classname="tests.unit.test_stemmer.TestFindMatches" name="test_find_matches_exact" time="0.002"><failure message="TypeError: 'MatchInfo' object is not subscriptable">tests/unit/test_stemmer.py:149: in test_find_matches_exact
+    assert m["keyword"] == "ransomware"
+           ^^^^^^^^^^^^
+E   TypeError: 'MatchInfo' object is not subscriptable</failure></testcase><testcase classname="tests.unit.test_stemmer.TestFindMatches" name="test_find_matches_stemmed" time="0.003"><failure message="assert 0 &gt;= 1&#10; +  where 0 = len([])">tests/unit/test_stemmer.py:156: in test_find_matches_stemmed
+    assert len(matches) &gt;= 1
+E   assert 0 &gt;= 1
+E    +  where 0 = len([])</failure></testcase><testcase classname="tests.unit.test_stemmer.TestFindMatches" name="test_find_matches_no_keywords" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestCaseSensitivity" name="test_case_sensitive" time="0.003" /><testcase classname="tests.unit.test_stemmer.TestCaseSensitivity" name="test_case_insensitive" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestSpecialCharacters" name="test_special_characters_escaped" time="0.009"><failure message="AttributeError: 'NoneType' object has no attribute 'search'">tests/unit/test_stemmer.py:188: in test_special_characters_escaped
+    assert stemmer.compiled_pattern.search("C++")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   AttributeError: 'NoneType' object has no attribute 'search'</failure></testcase><testcase classname="tests.unit.test_stemmer.TestRepr" name="test_repr_str" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestRegistry" name="test_registry_init_defaults" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestRegistry" name="test_registry_with_stemmer" time="0.001" /><testcase classname="tests.unit.test_stemmer.TestRegistry" name="test_extract_all" time="0.001"><failure message="AssertionError: assert ('ransomware' in set() or 'CVE' in set() or 'exploit' in set())">tests/unit/test_stemmer.py:219: in test_extract_all
+    assert (
+E   AssertionError: assert ('ransomware' in set() or 'CVE' in set() or 'exploit' in set())</failure></testcase><testcase classname="tests.unit.test_stemmer.TestRegistry" name="test_regenerate_dynamic_patterns" time="0.001" /></testsuite></testsuites>
