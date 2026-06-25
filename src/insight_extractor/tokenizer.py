@@ -25,19 +25,19 @@ class SentenceTokenizer:
         if self._tokenizer is None:
             from transformers import AutoTokenizer
 
-            self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            self._tokenizer = AutoTokenizer.from_pretrained(self.model_name)  # type: ignore[no-untyped-call]
         return self._tokenizer
 
     def count_tokens(self, text: str) -> int:
         """Return the number of tokens for text."""
-        return len(self.tokenizer.encode(text, add_special_tokens=False))
+        return len(self.tokenizer.encode(text, add_special_tokens=False))  # type: ignore[attr-defined]
 
     def chunk_text(self, text: str, max_tokens: int = 512, overlap: int = 50) -> list[str]:
         """
         Split text into chunks of max_tokens with sliding window overlap.
         Uses the model's tokenizer for accurate token counting.
         """
-        tokens = self.tokenizer.encode(text, add_special_tokens=False)
+        tokens = self.tokenizer.encode(text, add_special_tokens=False)  # type: ignore[attr-defined]
         if len(tokens) <= max_tokens:
             return [text]
 
@@ -46,7 +46,7 @@ class SentenceTokenizer:
         while start < len(tokens):
             end = min(start + max_tokens, len(tokens))
             chunk_tokens = tokens[start:end]
-            chunk_text = self.tokenizer.decode(chunk_tokens, skip_special_tokens=True)
+            chunk_text = self.tokenizer.decode(chunk_tokens, skip_special_tokens=True)  # type: ignore[attr-defined]
             chunks.append(chunk_text)
             start += max_tokens - overlap
             if start >= end:

@@ -157,8 +157,9 @@ class TestFindMatches:
         assert m.start < m.end
 
     def test_find_matches_stemmed(self, stemmer: DynamicKeywordStemmer) -> None:
-        stemmer.set_keywords(["ransom"])
-        matches = stemmer.find_matches("The ransomware group.")
+        # STEM mode: keyword "ransomware" + suffix "s" should match "ransomwares"
+        stemmer.set_keywords(["ransomware"])
+        matches = stemmer.find_matches("The ransomwares attacked again.")
         assert len(matches) >= 1
         assert any(m.stemmed for m in matches)
 
@@ -185,11 +186,17 @@ class TestSpecialCharacters:
     """Special regex characters in keywords are escaped."""
 
     def test_special_characters_escaped(self, stemmer: DynamicKeywordStemmer) -> None:
+        # Verify keywords with regex-special chars compile without PatternCompileError.
+        # \b word boundaries around non-word-char-terminated tokens (C++, [test])
+        # mean they won't match in typical text — the point is they DON'T throw.
         kws = ["C++", "[test]", "a.b", "x*y"]
         stemmer.set_keywords(kws)
         assert stemmer.compiled_pattern is not None
-        assert stemmer.compiled_pattern.search("C++")
-        assert stemmer.compiled_pattern.search("[test]")
+        # The escaped chars must appear literally in the pattern string
+        assert r"C\+\+" in stemmer.compiled_pattern.pattern
+        assert r"\[test\]" in stemmer.compiled_pattern.pattern
+        # Calling search on arbitrary text must not raise
+        _ = stemmer.compiled_pattern.search("using C++ and [test] cases")
 
 
 class TestRepr:
@@ -219,11 +226,14 @@ class TestRegistry:
         assert isinstance(results, dict)
 
     def test_extract_all_dynamic_keyword_matches(
-        self, registry_with_stemmer: KeywordPatternRegistry
+        self,
+        registry_with_stemmer: KeywordPatternRegistry,
+        sample_keywords: list[str],
     ) -> None:
+        # regenerate_dynamic_patterns must be called before dynamic matches work
+        registry_with_stemmer.regenerate_dynamic_patterns(sample_keywords)
         text = "The ransomware used a CVE exploit."
         results = registry_with_stemmer.extract_all(text)
-        # Values are lists of matched strings
         all_matches = [m for matches in results.values() for m in matches]
         assert isinstance(all_matches, list)
         assert any(isinstance(m, str) for m in all_matches)

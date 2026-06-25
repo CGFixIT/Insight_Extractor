@@ -13,8 +13,8 @@ from typing import Any
 
 import numpy as np
 from sentence_transformers import SentenceTransformer
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import TfidfVectorizer  # type: ignore[import-untyped]
+from sklearn.metrics.pairwise import cosine_similarity  # type: ignore[import-untyped]
 
 from insight_extractor.config import KeywordCategory, StemMode
 from insight_extractor.constants import REGEX_PATTERNS, THREAD_SEEDS
@@ -410,7 +410,7 @@ class InsightExtractor:
         self.stemmer = DynamicKeywordStemmer(
             stem_mode=self.stem_mode,
             case_sensitive=False,
-            custom_suffixes=self.custom_stem_suffixes,
+            **({"custom_suffixes": self.custom_stem_suffixes} if self.custom_stem_suffixes else {}),
         )
         if self.thread_keywords:
             self.stemmer.set_keywords(self.thread_keywords)
@@ -455,7 +455,7 @@ class InsightExtractor:
                     raise ConfigLoadError(f"Failed to load TOML config {p}: {exc}") from exc
             case ".yaml" | ".yml":
                 try:
-                    import yaml
+                    import yaml  # type: ignore[import-untyped]
 
                     with p.open(encoding="utf-8") as fh:
                         data = yaml.safe_load(fh)
@@ -531,8 +531,8 @@ class InsightExtractor:
         _buckets: list[tuple[set[str], KeywordCategory]] = [
             (threat_terms, KeywordCategory.THREAT_INTEL),
             (osint_terms, KeywordCategory.OSINT),
-            (safety_terms, KeywordCategory.SAFETY),
-            (ai_terms, KeywordCategory.AI_ML),
+            (safety_terms, KeywordCategory.CHILD_SAFETY),
+            (ai_terms, KeywordCategory.AI_INFRA),
         ]
         for kw in self.thread_keywords:
             if kw in self.keyword_categories:
@@ -826,9 +826,7 @@ class InsightExtractor:
             top_keywords=top_kw,
             stem_mode=self.stemmer.stem_mode.value,
             case_sensitive=self.stemmer.case_sensitive,
-            custom_suffixes=list(self.stemmer.custom_suffixes)
-            if self.stemmer.custom_suffixes
-            else [],
+            custom_suffixes=tuple(self.stemmer.custom_suffixes),
             last_updated=format_timestamp(datetime.now(UTC)),
         )
 
@@ -884,7 +882,7 @@ class InsightExtractor:
     ) -> Path:
         """Format *result* as Markdown and write to *self.output_dir / filename*."""
         md_path = self.output_dir / filename
-        ts = format_timestamp(result.timestamp)
+        ts = result.timestamp
 
         lines: list[str] = [
             "# Insight Extraction Results\n",
