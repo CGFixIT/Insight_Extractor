@@ -21,6 +21,6 @@ sentence-transformers==3.4.1
 scikit-learn==1.6.1
 pyyaml==6.0.2
 pydantic==2.11.0
-transformers==4.53.0
+transformers==5.0.0rc3
 numpy==2.2.6
 accelerate==0.34.2
