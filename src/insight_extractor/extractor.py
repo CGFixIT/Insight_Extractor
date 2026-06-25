@@ -407,11 +407,17 @@ class InsightExtractor:
                 logger.warning("Failed to load config; using defaults.")
 
         # ---- stemmer + pattern registry ------------------------------------
-        self.stemmer = DynamicKeywordStemmer(
-            stem_mode=self.stem_mode,
-            case_sensitive=False,
-            **({"custom_suffixes": self.custom_stem_suffixes} if self.custom_stem_suffixes else {}),
-        )
+        if self.custom_stem_suffixes is not None:
+            self.stemmer = DynamicKeywordStemmer(
+                stem_mode=self.stem_mode,
+                case_sensitive=False,
+                custom_suffixes=self.custom_stem_suffixes,
+            )
+        else:
+            self.stemmer = DynamicKeywordStemmer(
+                stem_mode=self.stem_mode,
+                case_sensitive=False,
+            )
         if self.thread_keywords:
             self.stemmer.set_keywords(self.thread_keywords)
 
