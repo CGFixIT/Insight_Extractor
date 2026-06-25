@@ -1,0 +1,19 @@
+# Runtime dependencies
+# See constraints.txt for pinned known-good versions.
+#
+# DEPENDENCY NOTES:
+# - transformers: pinned >=4.53.0 — clears all CVEs fixable upstream (ReDoS, RCE batches)
+#   Unfixed upstream: CVE-2025-14920/14921/14924/14926/14927/14928/14929/14930 (checkpoint
+#   conversion deserialization — only triggered when converting old-format model checkpoints,
+#   NOT during normal inference with all-MiniLM-L6-v2)
+# - accelerate: REQUIRED — provides init_empty_weights used by sentence-transformers.
+#   Missing accelerate causes: ModelLoadError: name 'init_empty_weights' is not defined
+# - sentence-transformers: 3.4.1 is the latest 3.x stable, tested against transformers 4.53+
+
+sentence-transformers>=3.4.1,<4.0.0
+scikit-learn>=1.5.0
+pyyaml>=6.0
+pydantic>=2.0
+transformers>=4.53.0,<5.0.0
+numpy>=1.26.0
+accelerate>=0.26.0

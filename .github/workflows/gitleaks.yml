@@ -1,0 +1,73 @@
+name: Gitleaks Secret Scan
+
+on:
+  push:
+    branches: ["main", "master", "develop"]
+  pull_request:
+    branches: ["main", "master", "develop"]
+  # Allow manual trigger for scanning historical commits
+  workflow_dispatch:
+    inputs:
+      scan_depth:
+        description: "Number of commits to scan (0 = full history)"
+        required: false
+        default: "50"
+        type: string
+
+permissions:
+  # Required to read repo contents
+  contents: read
+  # Required to post PR annotations / security findings (if using SARIF upload)
+  security-events: write
+
+jobs:
+  gitleaks:
+    name: Gitleaks Secret Detection
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # Full history needed for accurate historical scans.
+          # On PRs, fetch the base ref too so gitleaks can diff properly.
+          fetch-depth: 0
+
+      # -----------------------------------------------------------------------
+      # Run Gitleaks via the official action
+      # -----------------------------------------------------------------------
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          # GITHUB_TOKEN is used to post findings as PR annotations
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Optional: set a Gitleaks license key if you have one (free tier works without it)
+          # GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}
+        with:
+          # 'detect' scans the repo history; 'protect' scans only the latest commit
+          args: >-
+            detect
+            --redact
+            --verbose
+            --log-level=warn
+            --exit-code=1
+
+      # -----------------------------------------------------------------------
+      # Upload SARIF report to GitHub Security tab (if findings exist)
+      # -----------------------------------------------------------------------
+      - name: Upload SARIF report to GitHub Security
+        if: always() && hashFiles('results.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
+          category: gitleaks
+
+      # -----------------------------------------------------------------------
+      # Archive the raw report as an artifact (useful for audit trails)
+      # -----------------------------------------------------------------------
+      - name: Archive Gitleaks report
+        if: always() && hashFiles('results.sarif') != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: gitleaks-sarif-report
+          path: results.sarif
+          retention-days: 30

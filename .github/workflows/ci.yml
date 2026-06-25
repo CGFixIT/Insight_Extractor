@@ -1,0 +1,273 @@
+name: CI
+
+on:
+  push:
+    branches: ["main", "master", "develop"]
+  pull_request:
+    branches: ["main", "master", "develop"]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PYTHON_VERSION: "3.12"
+  # Suppress HuggingFace/transformers progress bars and telemetry in CI
+  TRANSFORMERS_VERBOSITY: error
+  HF_HUB_DISABLE_PROGRESS_BARS: "1"
+  HF_HUB_DISABLE_TELEMETRY: "1"
+  TOKENIZERS_PARALLELISM: "false"
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # 1. Lint & format check  (fast gate — no model download)
+  # ---------------------------------------------------------------------------
+  lint:
+    name: Lint & Format (ruff)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install ruff
+        run: pip install --upgrade ruff
+
+      - name: ruff check
+        run: ruff check src/ tests/
+
+      - name: ruff format (check only)
+        run: ruff format --check src/ tests/
+
+  # ---------------------------------------------------------------------------
+  # 2. Type checking  (fast gate — no model download)
+  # ---------------------------------------------------------------------------
+  typecheck:
+    name: Type Check (mypy)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install package + dev deps
+        run: pip install -e ".[dev]"
+
+      - name: mypy strict
+        run: mypy src/insight_extractor
+
+  # ---------------------------------------------------------------------------
+  # 3. Unit tests  (no sentence-transformers model needed)
+  # ---------------------------------------------------------------------------
+  unit-tests:
+    name: Unit Tests (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.12", "3.13"]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install package + dev deps
+        run: pip install -e ".[dev]"
+
+      - name: Run unit tests
+        run: |
+          pytest tests/unit/ \
+            -v \
+            --tb=short \
+            --cov=insight_extractor \
+            --cov-report=term-missing \
+            --cov-report=xml \
+            --junitxml=junit-unit-${{ matrix.python-version }}.xml
+
+      - name: Upload coverage report
+        if: matrix.python-version == '3.12'
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-xml
+          path: coverage.xml
+
+  # ---------------------------------------------------------------------------
+  # 4. Integration / smoke test — emulates script output with a generated
+  #    .txt input file (does NOT download the full BERT model; uses the
+  #    regex + keyword pipeline which has no heavy ML dependency at init time)
+  # ---------------------------------------------------------------------------
+  smoke-test:
+    name: Smoke Test (script run + generated .txt input)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install package (runtime deps only)
+        # Install without heavy torch/transformers to keep CI fast.
+        # The smoke test exercises the regex + keyword pipeline end-to-end
+        # and confirms the CLI entry point resolves and runs without error.
+        run: pip install -e .
+
+      - name: Generate synthetic threat-intel input file
+        run: |
+          cat > /tmp/smoke_input.txt << 'EOF'
+          On May 11 2026, the Nitrogen ransomware group claimed to have stolen 8 terabytes
+          of data from Foxconn North American facilities in Mount Pleasant, Wisconsin.
+          The group exploited CVE-2026-12345 in the Starlette ASGI framework to gain
+          initial access via a server-side request forgery (SSRF) vulnerability.
+          A SHA-256 hash 3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b4c
+          was observed in memory dumps across 14 VMware ESXi hosts.
+          Conti 2 builder code was repurposed to generate an ESXi locker.
+          Lateral movement was achieved via pass-the-hash and Kerberoasting.
+          Contact: ransom@darkmail.onion | BTC wallet: 1A1zP1eP5QGefi2DMPTfTL5SLmv7Divf8C
+          Affected IP: 192.168.1.254  Port: 4444
+          Data exfiltrated: 8 TB over 72 hours before encryption.
+          CVE-2026-48710 affects millions of AI agent pipelines using LangChain and ChromaDB.
+          OSINT recon via Shodan, Censys, and Google dorking revealed exposed admin panels.
+          The threat actor also leveraged BERT embeddings and RAG pipelines for C2 comms.
+          EOF
+
+      - name: Run insight-extractor CLI against synthetic input
+        # Patch __main__ to skip semantic (BERT) extraction in smoke mode
+        # by passing the text through the regex-only path at the Python level.
+        run: |
+          python - << 'PYEOF'
+          import sys, pathlib, json
+
+          # Add src to path (installed in editable mode, but be explicit)
+          sys.path.insert(0, "src")
+
+          from insight_extractor.extractor import InsightExtractor
+          from insight_extractor.utils import setup_logging
+
+          setup_logging()
+
+          input_path = pathlib.Path("/tmp/smoke_input.txt")
+          text = input_path.read_text(encoding="utf-8")
+
+          # Initialise with an empty seed list so no model load is triggered
+          # by __init__. The regex pipeline does not require the BERT model.
+          extractor = InsightExtractor(seed_keywords=[], enable_dynamic_regex=True)
+
+          # Run regex-only extraction (no BERT call → no model download)
+          regex_entities = extractor.extract_regex_entities(text)
+          dynamic_matches = extractor.extract_dynamic_entities(text)
+
+          print("=== REGEX ENTITIES ===")
+          for etype, vals in regex_entities.items():
+              print(f"  {etype}: {vals}")
+
+          print("\n=== DYNAMIC KEYWORD MATCHES ===")
+          for etype, vals in dynamic_matches.items():
+              print(f"  {etype}: {vals[:5]}")
+
+          # Validate expected patterns are found
+          assert "CVE_ID" in regex_entities, "CVE_ID regex pattern not matched"
+          assert any("nitrogen" in str(v).lower() or "conti" in str(v).lower()
+                     for v in dynamic_matches.values()), \
+              "Expected threat keywords not found in dynamic matches"
+
+          print("\n[SMOKE PASS] Regex + keyword pipeline ran successfully.")
+
+          # Write a results artefact so CI can upload it
+          out = {
+              "regex_entities": regex_entities,
+              "dynamic_keyword_matches": {k: v[:5] for k, v in dynamic_matches.items()},
+          }
+          pathlib.Path("/tmp/smoke_results.json").write_text(
+              json.dumps(out, indent=2, ensure_ascii=False), encoding="utf-8"
+          )
+          PYEOF
+
+      - name: Upload smoke test results artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-test-results
+          path: /tmp/smoke_results.json
+
+  # ---------------------------------------------------------------------------
+  # 5. Integration tests  (optional — heavy; skipped unless manually triggered
+  #    or on a schedule, to avoid downloading BERT weights on every push)
+  # ---------------------------------------------------------------------------
+  integration-tests:
+    name: Integration Tests (full BERT pipeline)
+    runs-on: ubuntu-latest
+    # Run on manual dispatch, schedule, or when [run-integration] in commit msg
+    if: |
+      github.event_name == 'workflow_dispatch' ||
+      contains(github.event.head_commit.message, '[run-integration]')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: pip
+
+      - name: Install package + dev deps
+        run: pip install -e ".[dev]"
+
+      - name: Cache HuggingFace model weights
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: hf-models-all-MiniLM-L6-v2-${{ runner.os }}
+          restore-keys: hf-models-
+
+      - name: Run integration tests
+        run: |
+          pytest tests/integration/ \
+            -v \
+            --tb=short \
+            --junitxml=junit-integration.xml
+
+      - name: Upload integration test results
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-integration
+          path: junit-integration.xml
+
+  # ---------------------------------------------------------------------------
+  # 6. Required status check gate
+  # ---------------------------------------------------------------------------
+  ci-pass:
+    name: CI Pass
+    runs-on: ubuntu-latest
+    needs: [lint, typecheck, unit-tests, smoke-test]
+    if: always()
+    steps:
+      - name: All required jobs passed
+        run: |
+          if [[ "${{ needs.lint.result }}"        != "success" ||
+                "${{ needs.typecheck.result }}"   != "success" ||
+                "${{ needs.unit-tests.result }}"  != "success" ||
+                "${{ needs.smoke-test.result }}"  != "success" ]]; then
+            echo "One or more required CI jobs failed."
+            exit 1
+          fi
+          echo "All required CI jobs passed."

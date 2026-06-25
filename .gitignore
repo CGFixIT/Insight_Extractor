@@ -1,0 +1,190 @@
+# =============================================================================
+# insight-extractor — .gitignore
+# Python 3.12+ | src layout | hatchling | ruff | mypy | pytest | sentence-transformers
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Python byte-code & caches
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyo
+
+# ---------------------------------------------------------------------------
+# Distribution / build artifacts
+# ---------------------------------------------------------------------------
+dist/
+build/
+*.egg-info/
+*.egg
+MANIFEST
+.eggs/
+wheels/
+*.whl
+*.tar.gz
+*.zip
+!constraints.txt         # keep pinned constraints in repo
+
+# ---------------------------------------------------------------------------
+# Virtual environments
+# ---------------------------------------------------------------------------
+.venv/
+venv/
+env/
+ENV/
+.env/
+.venv*/
+# uv managed envs
+.uv/
+
+# ---------------------------------------------------------------------------
+# uv lockfile is intentionally tracked — do NOT ignore uv.lock
+# ---------------------------------------------------------------------------
+
+# ---------------------------------------------------------------------------
+# Secrets & credentials — never commit these
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+secrets.yaml
+secrets.yml
+secrets.json
+credentials.json
+token.json
+*_secret*
+*_token*
+api_keys.py
+config.local.*
+
+# ---------------------------------------------------------------------------
+# ML model weights & caches  (sentence-transformers / HuggingFace / torch)
+# ---------------------------------------------------------------------------
+*.bin
+*.pt
+*.pth
+*.ckpt
+*.safetensors
+*.onnx
+*.h5
+*.hdf5
+# HuggingFace/transformers local cache (often ~GB)
+.cache/
+models/
+model_cache/
+huggingface/
+sentence_transformers/
+~/.cache/huggingface/
+
+# ---------------------------------------------------------------------------
+# Runtime output files produced by InsightExtractor
+# ---------------------------------------------------------------------------
+insights_extracted.md
+insight_extractor_state.json
+outputs/
+results/
+*.md.bak
+
+# ---------------------------------------------------------------------------
+# Pytest & coverage
+# ---------------------------------------------------------------------------
+.pytest_cache/
+.coverage
+.coverage.*
+coverage.xml
+coverage/
+htmlcov/
+*.cover
+*.lcov
+junit.xml
+test-results/
+test_output/
+
+# ---------------------------------------------------------------------------
+# Mypy type-check cache
+# ---------------------------------------------------------------------------
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# ---------------------------------------------------------------------------
+# Ruff cache
+# ---------------------------------------------------------------------------
+.ruff_cache/
+
+# ---------------------------------------------------------------------------
+# Pre-commit
+# ---------------------------------------------------------------------------
+.pre-commit-cache/
+
+# ---------------------------------------------------------------------------
+# Jupyter / IPython
+# ---------------------------------------------------------------------------
+*.ipynb_checkpoints/
+.ipynb_checkpoints/
+*.ipynb
+profile_default/
+ipython_config.py
+
+# ---------------------------------------------------------------------------
+# Operating system artifacts
+# ---------------------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+# Linux
+*~
+.nfs*
+
+# ---------------------------------------------------------------------------
+# IDE / editor artefacts
+# ---------------------------------------------------------------------------
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+.project
+.classpath
+.settings/
+*.code-workspace
+
+# ---------------------------------------------------------------------------
+# Packaging / installer logs
+# ---------------------------------------------------------------------------
+pip-log.txt
+pip-delete-this-directory.txt
+
+# ---------------------------------------------------------------------------
+# Profiling
+# ---------------------------------------------------------------------------
+*.prof
+*.lprof
+*.pstats
+
+# ---------------------------------------------------------------------------
+# Temporary & scratch files
+# ---------------------------------------------------------------------------
+tmp/
+temp/
+scratch/
+*.tmp
+*.bak
+*.orig
+*.log

@@ -1,0 +1,26 @@
+# Pinned versions — known-good, reproducible build
+# Tested: Python 3.12 / Windows (R2D2sys) / CPU-only / June 2026
+#
+# Install:
+#   pip install -r requirements.txt -c constraints.txt
+#   pip install -e .
+#
+# KEY FIX — ModelLoadError: name 'init_empty_weights' is not defined
+#   Root cause: 'accelerate' package was missing.
+#   This constraints file includes accelerate==0.34.2 which resolves it.
+#   If you still see the error after installing with these constraints, run:
+#     pip install accelerate --upgrade
+#
+# transformers pinned to 4.53.0 — clears all CVEs with available fixes.
+# Remaining unfixed CVEs (CVE-2025-14920/21/24/26/27/28/29/30) affect only
+# checkpoint-conversion utilities (convert_*_to_pytorch scripts), not the
+# inference path used by this project (all-MiniLM-L6-v2 via from_pretrained).
+# Risk verdict: UNREACHABLE for this project's use case.
+
+sentence-transformers==3.4.1
+scikit-learn==1.6.1
+pyyaml==6.0.2
+pydantic==2.11.0
+transformers==4.53.0
+numpy==2.2.6
+accelerate==0.34.2
