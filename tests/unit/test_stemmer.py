@@ -94,12 +94,15 @@ class TestCompileKeywords:
         for kw in kws:
             assert stemmer.compiled_pattern.search(kw), f"failed to match {kw}"
 
-    def test_compile_keywords_max_length(self, stemmer: DynamicKeywordStemmer) -> None:
-        """Very long keyword list triggers truncation; first keyword still matches."""
-        long_kws = [f"kw_{i:05d}" for i in range(2000)]
+    def test_compile_keywords_max_length_keeps_all_keywords(self) -> None:
+        """Long keyword lists are chunked instead of truncated."""
+        stemmer = DynamicKeywordStemmer(stem_mode=StemMode.EXACT, max_pattern_length=50)
+        long_kws = [f"kw_{i:05d}" for i in range(200)]
         stemmer.set_keywords(long_kws)
         assert stemmer.compiled_pattern is not None
-        assert stemmer.compiled_pattern.search("kw_00000")
+        text = " ".join(long_kws)
+        matches = {match.match for match in stemmer.find_matches(text)}
+        assert matches == set(long_kws)
 
 
 class TestCompileTypedPatterns:

@@ -70,6 +70,9 @@ Issues = "https://github.com/CGFixIT/insight-extractor/issues"
 [tool.hatch.build.targets.wheel]
 packages = ["src/insight_extractor"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"src/insight_extractor/py.typed" = "insight_extractor/py.typed"
+
 [tool.ruff]
 line-length = 100
 target-version = "py312"

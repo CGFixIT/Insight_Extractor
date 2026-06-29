@@ -12,6 +12,7 @@ from pathlib import Path
 from typing import Any
 
 import numpy as np
+import numpy.typing as npt
 from sentence_transformers import SentenceTransformer
 from sklearn.feature_extraction.text import TfidfVectorizer  # type: ignore[import-untyped]
 from sklearn.metrics.pairwise import cosine_similarity  # type: ignore[import-untyped]
@@ -433,7 +434,7 @@ class InsightExtractor:
         self._model: SentenceTransformer | None = None
 
         # ---- embeddings -----------------------------------------------------
-        self._keyword_embeddings: np.ndarray | None = None
+        self._keyword_embeddings: npt.NDArray[np.float64] | None = None
 
         # ---- TF-IDF corpus for dynamic expansion ---------------------------
         self._tfidf_corpus: list[str] = []

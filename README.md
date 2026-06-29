@@ -319,8 +319,6 @@ Insight_Extractor/
 ├── constraints.txt             # Pinned known-good versions
 ├── README.md                   # This file
 ├── SPEC.md                     # Full technical specification
-├── plan.md                     # Development plan / changelog
-├── insight_extractor.py        # Standalone single-file version
 ├── src/
 │   └── insight_extractor/
 │       ├── __init__.py         # Package entry point with lazy imports
@@ -332,14 +330,15 @@ Insight_Extractor/
 │       ├── stemmer.py          # DynamicKeywordStemmer, KeywordPatternRegistry
 │       ├── extractor.py        # InsightExtractor orchestrator (main engine)
 │       ├── tokenizer.py        # SentenceTokenizer (BERT-aware chunking)
-│       └── utils.py            # Logging, hashing, timestamp helpers
+│       ├── utils.py            # Logging, hashing, timestamp helpers
+│       └── py.typed            # PEP 561 typed package marker
 └── tests/
     ├── conftest.py             # Shared pytest fixtures
     ├── unit/                   # Fast tests — no model download
     │   ├── test_exceptions.py
     │   ├── test_models.py
     │   ├── test_stemmer.py
-    │   └── test_tokenizer.py
+    │   └── test_utils.py
     └── integration/            # Full pipeline tests — requires BERT model
         ├── test_extractor.py
         └── test_e2e.py
@@ -383,7 +382,7 @@ mypy src/insight_extractor
 | Constructor | `DynamicKeywordStemmer(stem_mode, case_sensitive, custom_suffixes)` | Create stemmer instance |
 | `generate_pattern` | `(keyword, mode=None) -> str` | Regex pattern for one keyword |
 | `generate_stem_variations` | `(keyword) -> list[str]` | All stemmed forms |
-| `compile_keywords` | `(keywords) -> re.Pattern` | Single OR pattern for all keywords |
+| `compile_keywords` | `(keywords) -> KeywordPattern` | One logical pattern, chunked internally for large keyword banks |
 | `compile_typed_patterns` | `(keywords) -> dict[str, re.Pattern]` | Per-keyword typed patterns |
 | `find_matches` | `(text) -> list[MatchInfo]` | All keyword matches with positions |
 | `add_keyword` | `(kw)` | Add one keyword and recompile |

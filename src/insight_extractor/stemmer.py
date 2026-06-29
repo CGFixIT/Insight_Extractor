@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import logging
 import re
-import warnings
 from collections import defaultdict
+from collections.abc import Iterator
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
@@ -16,9 +16,31 @@ if TYPE_CHECKING:
 
 logger: logging.Logger = logging.getLogger(__name__)
 
+
 # Type aliases
+class ChunkedKeywordPattern:
+    """Small adapter that searches multiple regex chunks as one logical pattern."""
+
+    def __init__(self, patterns: list[re.Pattern[str]]) -> None:
+        self.patterns = patterns
+        self.pattern = "|".join(pattern.pattern for pattern in patterns)
+
+    def search(self, text: str) -> re.Match[str] | None:
+        matches = [match for pattern in self.patterns if (match := pattern.search(text))]
+        if not matches:
+            return None
+        return min(matches, key=lambda match: match.start())
+
+    def finditer(self, text: str) -> Iterator[re.Match[str]]:
+        matches: list[re.Match[str]] = []
+        for pattern in self.patterns:
+            matches.extend(pattern.finditer(text))
+        yield from sorted(matches, key=lambda match: (match.start(), match.end()))
+
+
+type KeywordPattern = re.Pattern[str] | ChunkedKeywordPattern
 type RegexPatternDict = dict[str, str]
-type TypedPatternDict = dict[str, re.Pattern[str]]
+type TypedPatternDict = dict[str, KeywordPattern]
 type EntityResults = dict[str, list[str]]
 type MatchResultList = list[MatchInfo]
 type KeywordList = list[str]
@@ -68,7 +90,7 @@ class DynamicKeywordStemmer:
 
         # Internal caches -- invalidated on keyword changes
         self._keywords: KeywordList = []
-        self._compiled_master: re.Pattern[str] | None = None
+        self._compiled_master: KeywordPattern | None = None
         self._compiled_typed: TypedPatternDict | None = None
         self._last_updated: datetime | None = None
 
@@ -177,8 +199,8 @@ class DynamicKeywordStemmer:
 
     # -- Compilation ----------------------------------------------------------
 
-    def compile_keywords(self, keywords: list[str]) -> re.Pattern[str]:
-        """Compile all keywords into a single optimized regex pattern.
+    def compile_keywords(self, keywords: list[str]) -> KeywordPattern:
+        """Compile all keywords into one logical regex pattern.
 
         Parameters
         ----------
@@ -187,8 +209,8 @@ class DynamicKeywordStemmer:
 
         Returns
         -------
-        re.Pattern[str]
-            Compiled regex matching any keyword variation.
+        KeywordPattern
+            Compiled regex or chunked adapter matching any keyword variation.
 
         Raises
         ------
@@ -204,32 +226,24 @@ class DynamicKeywordStemmer:
             pat = self.generate_pattern(kw)
             patterns.append(f"({pat})")
 
-        combined = "|".join(patterns)
-
-        # Safety guard: truncate if combined pattern exceeds limit
-        if len(combined) > self.max_pattern_length:
-            warnings.warn(
-                f"Combined pattern exceeds max length "
-                f"({len(combined)} > {self.max_pattern_length}); "
-                f"truncating to fit.",
-                stacklevel=2,
-            )
-            kept: list[str] = []
-            total = 0
-            for pat in patterns:
-                new_total = total + len(pat)
-                if kept:
-                    new_total += 1  # "|" separator
-                if new_total <= self.max_pattern_length:
-                    kept.append(pat)
-                    total = new_total
-                else:
-                    break
-            combined = "|".join(kept)
-
         flags = 0 if self.case_sensitive else re.IGNORECASE
         try:
-            return re.compile(combined, flags)
+            chunks: list[list[str]] = [[]]
+            current_len = 0
+            for pat in patterns:
+                separator_len = 1 if chunks[-1] else 0
+                candidate_len = current_len + separator_len + len(pat)
+                if chunks[-1] and candidate_len > self.max_pattern_length:
+                    chunks.append([pat])
+                    current_len = len(pat)
+                else:
+                    chunks[-1].append(pat)
+                    current_len = candidate_len
+
+            compiled = [re.compile("|".join(chunk), flags) for chunk in chunks if chunk]
+            if len(compiled) == 1:
+                return compiled[0]
+            return ChunkedKeywordPattern(compiled)
         except re.error as exc:
             raise PatternCompileError(f"Failed to compile combined pattern: {exc}") from exc
 
@@ -327,7 +341,7 @@ class DynamicKeywordStemmer:
     # -- Lazy compiled pattern ------------------------------------------------
 
     @property
-    def compiled_pattern(self) -> re.Pattern[str] | None:
+    def compiled_pattern(self) -> KeywordPattern | None:
         """Lazily compiled master pattern -- rebuilt on cache miss."""
         if self._compiled_master is None and self._keywords:
             self._compiled_master = self.compile_keywords(self._keywords)
@@ -437,7 +451,7 @@ class KeywordPatternRegistry:
         self.static_patterns: RegexPatternDict = dict(static_patterns or {})
         self.stemmer: DynamicKeywordStemmer | None = stemmer
         self._dynamic_patterns: RegexPatternDict = {}
-        self._compiled_dynamic: re.Pattern[str] | None = None
+        self._compiled_dynamic: KeywordPattern | None = None
 
     # -- Representation -------------------------------------------------------
 
@@ -485,16 +499,12 @@ class KeywordPatternRegistry:
         self.stemmer.set_keywords(keywords)
 
         if keywords:
-            master_pattern = self.stemmer.compile_keywords(keywords).pattern
+            compiled_dynamic = self.stemmer.compile_keywords(keywords)
+            master_pattern = compiled_dynamic.pattern
             self._dynamic_patterns = {
                 PatternLabel.DYNAMIC_KEYWORD: master_pattern,
             }
-            flags = 0 if self.stemmer.case_sensitive else re.IGNORECASE
-            try:
-                self._compiled_dynamic = re.compile(master_pattern, flags)
-            except re.error as exc:
-                logger.warning("Failed to compile dynamic master pattern: %s", exc)
-                self._compiled_dynamic = None
+            self._compiled_dynamic = compiled_dynamic
         else:
             self._dynamic_patterns = {}
             self._compiled_dynamic = None
